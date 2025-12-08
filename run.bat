@@ -1,0 +1,6 @@
+@echo off
+echo Compilation...
+javac -d . affichage\*.java jdbc\*.java objet\*.java save\*.java main\*.java
+
+echo Execution...
+java -cp ".;lib\postgresql-42.7.8.jar" main.Main

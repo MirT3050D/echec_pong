@@ -1,3 +1,7 @@
+\c postgres;
+DROP DATABASE IF EXISTS echec_pong;
+CREATE DATABASE echec_pong;
+\c echec_pong;
 -- Table partie
 CREATE TABLE partie (
     id SERIAL PRIMARY KEY,

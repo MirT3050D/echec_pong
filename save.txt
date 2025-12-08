@@ -1,0 +1,10 @@
+PARTIE:objet.Partie@510a44fb
+PLATEAU:objet.Plateau@368dd164
+PARTIE:objet.Partie@3c2e53ea
+PLATEAU:objet.Plateau@4d4b365a
+PARTIE:objet.Partie@457c91de
+PLATEAU:objet.Plateau@1dd6317c
+PARTIE:objet.Partie@76ae802f
+PLATEAU:objet.Plateau@27392062
+PARTIE:objet.Partie@32e684ab
+PLATEAU:objet.Plateau@6f9495c
