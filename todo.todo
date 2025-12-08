@@ -1,0 +1,81 @@
+Pre_match_input
+    Affichage:
+       Afficher les champs de saisie suiants:
+        - Nombre de pièces
+        - Nombre de vie de chaque pièce
+    Métier:
+        Contrôle:
+            - Les nombres saisis ne sont pas négatifs (nb de pièces , et nb de vie)  
+            - Le nombre de pièces sasie doit être un nombre pair 
+        Métier:
+            - Création des Objets adéquats:
+                - Partie (Plateau plateau)
+                - Plateau (int nb_piece, pieces[][] pièces)
+                - Pièces (int vie, String nom, int position)
+        Persistance:
+            - Sauvegarde des objets créés dans une base de données et le fichier de sauvegarde
+    Base:
+        - partie (id, date, nbpieces)
+        - piece (id, nom, position)
+        - vie_piece (id, piece_id, vie, partie_id)
+
+Plateau_echec
+    Affichage:
+        Afficher un plateau d'echec vide (la taille varie selon le nombre de pièces saisie) :
+            - PlateauPanel (Plateau plateau) extends JPanel
+                Cette classe va servir à dessiner le plateau d'échec
+            - PlateauListner () implements MouseListener
+                Cette classe va gérer les événements de la souris sur le plateau
+    Métier:
+        Contrôle
+        Métier
+        Persistance
+    Base:
+Piece_echec
+    Affichage:
+        Afficher les pièces sur le plateau d'échec:
+            - PiecePanel (Piece piece) extends JPanel
+                Cette classe va servir à dessiner les pièces sur le plateau d'échec
+            - PieceListner ()
+                Cette classe va gérer les événements de la souris sur les pièces
+    Métier:
+        Contrôle
+        Métier
+        Persistance
+    Base:   
+Raquette_ping_pong
+    Affichage:
+        Afficher la raquette de ping pong:
+            - RaquettePanel (Raquette raquette) extends JPanel
+                Cette classe va servir à dessiner la raquette de ping pong
+            - RaquetteListner () implements MouseListener
+                Cette classe va gérer les événements de la souris sur la raquette
+                On peux changer l'inclinaison de la raquette avec la souris, et sa postion avec les touches fléchées
+    Métier:
+        Contrôle
+        Métier
+        Persistance
+    Base:
+Balle_ping_pong
+    Affichage:
+        Afficher la balle de ping pong:
+            - BallePanel (Balle balle) extends JPanel
+                Cette classe va servir à dessiner la balle de ping pong
+            - BalleListner () implements ActionListener
+                Cette classe va gérer les événements de la balle (mouvement, collision)
+                Si la balle touche une raquette ou bien le coin du plateau, elle rebondit
+    Métier:
+        Contrôle:
+            - Est ce que la balle touche une raquette ou le coin du plateau:
+                - CheckCollision()
+        Métier :
+            - premier mouvement de la balle au début de la partie à partir d'un angle choisi:
+                - premierMouvementBalle(angle)
+            - rebondir():
+                - rebondirRaquette()
+                - rebondirCoin()
+            - enleverVie(): (enlever la vie d'une piece de -1 au cas ou la balle touche une piece)
+                - enleverViePiece() 
+        Persistance:
+            - Sauvegarder la postion de la base à chaque seconde
+    Base:
