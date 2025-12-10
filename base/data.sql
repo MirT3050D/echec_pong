@@ -1,0 +1,17 @@
+INSERT INTO piece (nom, position) VALUES
+('Tour_gauche', 0),
+('Cavalier_gauche', 1),
+('fou_gauche', 2),
+('reine', 3),
+('roi', 4),
+('fou_droite', 5),
+('Cavalier_droite', 6),
+('Tour_droite', 7),
+('Pion_1', 8),
+('Pion_2', 9),
+('Pion_3', 10),
+('Pion_4', 11),
+('Pion_5', 12),
+('Pion_6', 13),
+('Pion_7', 14),
+('Pion_8', 15);

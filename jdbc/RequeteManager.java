@@ -23,6 +23,7 @@ public class RequeteManager {
     }
 
     public int executeUpdate(String sql) {
+        System.out.println("Executing SQL: " + sql);
         try {
             Statement stmt = connection.createStatement();
             return stmt.executeUpdate(sql);

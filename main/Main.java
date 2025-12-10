@@ -1,9 +1,8 @@
 package main;
+import affichage.*;
 public class Main {
     public static void main(String[] args) {
-        javax.swing.SwingUtilities.invokeLater(() -> {
-            affichage.MaFenetre fen = new affichage.MaFenetre();
+            MaFenetre fen = new MaFenetre();
             fen.setVisible(true);
-        });
     }
 }

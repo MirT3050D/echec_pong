@@ -5,8 +5,8 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class MaFenetre extends JFrame {
-    private InitialisationNbPiece panelNbPiece;
-    private InitialisationViePiece panelViePiece;
+    private InitialisationNbPiecePanel panelNbPiece;
+    private InitialisationViePiecePanel panelViePiece;
     private JButton validerNbPieceBtn;
     private JButton validerVieBtn;
 
@@ -17,7 +17,7 @@ public class MaFenetre extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
-        panelNbPiece = new InitialisationNbPiece();
+        panelNbPiece = new InitialisationNbPiecePanel();
         validerNbPieceBtn = new JButton("Valider");
         JPanel topPanel = new JPanel(new FlowLayout());
         topPanel.add(panelNbPiece);
@@ -25,15 +25,29 @@ public class MaFenetre extends JFrame {
         add(topPanel, BorderLayout.NORTH);
 
         // Ajout du listener séparé
-        validerNbPieceBtn.addActionListener(new NbPieceListener(this));
+            validerNbPieceBtn.addActionListener(new InitialisationNbPieceListener(this)); // Listener for validating pieces
+        }
+
+        public void afficherPanelViePiece(int nbPiece) {
+            setPanelViePiece(new InitialisationViePiecePanel(nbPiece));
+            setValiderVieBtn(new JButton("Valider les vies"));
+            JPanel viePanel = new JPanel(new java.awt.BorderLayout());
+            viePanel.add(getPanelViePiece(), java.awt.BorderLayout.CENTER);
+            viePanel.add(getValiderVieBtn(), java.awt.BorderLayout.SOUTH);
+            getContentPane().removeAll();
+            add(viePanel, java.awt.BorderLayout.CENTER);
+            revalidate();
+            repaint();
+            getValiderVieBtn().addActionListener(new InitialisationViePieceListner(this));
+        // Fin de la méthode afficherPanelViePiece
     }
 
     // Getters et setters pour accès depuis le listener
-    public InitialisationNbPiece getPanelNbPiece() { return panelNbPiece; }
-    public InitialisationViePiece getPanelViePiece() { return panelViePiece; }
+    public InitialisationNbPiecePanel getPanelNbPiece() { return panelNbPiece; }
+    public InitialisationViePiecePanel getPanelViePiece() { return panelViePiece; }
     public JButton getValiderNbPieceBtn() { return validerNbPieceBtn; }
     public JButton getValiderVieBtn() { return validerVieBtn; }
-    public void setPanelViePiece(InitialisationViePiece panelViePiece) { this.panelViePiece = panelViePiece; }
+    public void setPanelViePiece(InitialisationViePiecePanel panelViePiece) { this.panelViePiece = panelViePiece; }
     public void setValiderVieBtn(JButton validerVieBtn) { this.validerVieBtn = validerVieBtn; }
 
     // ...la classe MaFenetre ne contient plus de main...

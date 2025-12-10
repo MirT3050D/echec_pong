@@ -3,11 +3,11 @@ package affichage;
 import javax.swing.*;
 import java.awt.*;
 
-public class InitialisationNbPiece extends JPanel {
+public class InitialisationNbPiecePanel extends JPanel {
     private JLabel label;
     private JTextField nbPieceField;
 
-    public InitialisationNbPiece() {
+    public InitialisationNbPiecePanel() {
         setLayout(new FlowLayout());
         label = new JLabel("Nombre de pièces :");
         nbPieceField = new JTextField(5);

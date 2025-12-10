@@ -1,0 +1,19 @@
+[UML DIAGRAM]
+
+Diagramme PNG à générer :
+
+- PiecePanel <--> PieceListener <--> Piece
+- PlateauPanel <--> PlateauListener <--> Plateau
+
+Représentation visuelle :
+
++-------------------+        +-------------------+        +-------------------+
+|    PiecePanel     |<------>|  PieceListener    |<------>|      Piece        |
++-------------------+        +-------------------+        +-------------------+
+        ^                          ^                              ^
+        |                          |                              |
++-------------------+        +-------------------+        +-------------------+
+|   PlateauPanel    |<------>| PlateauListener   |<------>|     Plateau       |
++-------------------+        +-------------------+        +-------------------+
+
+Pour générer le PNG, utilise un outil UML en ligne (ex : plantuml, draw.io) ou demande une génération automatique si disponible.
