@@ -48,6 +48,7 @@ public class InitialisationViePieceListner implements ActionListener {
         Plateau plateau = new Plateau(0, nbPiece, pieces);
         Partie partie = new Partie(0, new Date(), plateau);
         Save saveManager = new Save();
+        plateau.setPieces(plateau.getPiecesVivantesTriees());
         saveManager.sauvegarderConfigurationPartie(partie, plateau);
         JOptionPane.showMessageDialog(fenetre, "Initialisation terminée et sauvegardée !", "Info", JOptionPane.INFORMATION_MESSAGE);
         fenetre.afficherPlateau(plateau);

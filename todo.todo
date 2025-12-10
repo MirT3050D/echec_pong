@@ -43,19 +43,19 @@
         ✔ Métier @done(25-12-10 17:46)
         ✔ Persistance @done(25-12-10 17:46)
     ✔ Base: @done(25-12-10 17:46)
-Raquette_ping_pong
-    Affichage:
-        Afficher la raquette de ping pong:
-            - RaquettePanel (Raquette raquette) extends JPanel
-                Cette classe va servir à dessiner la raquette de ping pong
-            - RaquetteListner () implements MouseListener
-                Cette classe va gérer les événements de la souris sur la raquette
-                On peux changer l'inclinaison de la raquette avec la souris, et sa postion avec les touches fléchées
-    Métier:
-        Contrôle
-        Métier
-        Persistance
-    Base:
+✔ Raquette_ping_pong @done(25-12-10 19:22)
+    ✔ Affichage: @done(25-12-10 19:22)
+        ✔ Afficher la raquette de ping pong: @done(25-12-10 19:22)
+            ✔ RaquettePanel (Raquette raquette) extends JPanel @done(25-12-10 19:22)
+                ✔ Cette classe va servir à dessiner la raquette de ping pong @done(25-12-10 19:22)
+            ✔ RaquetteListner () implements MouseListener @done(25-12-10 19:22)
+                ✔ Cette classe va gérer les événements de la souris sur la raquette @done(25-12-10 19:22)
+                ✔ On peux changer l'inclinaison de la raquette avec la souris, et sa postion avec les touches fléchées @done(25-12-10 19:22)
+    ✔ Métier: @done(25-12-10 19:22)
+        ✔ Contrôle @done(25-12-10 19:22)
+        ✔ Métier @done(25-12-10 19:22)
+        ✔ Persistance @done(25-12-10 19:22)
+    ✔ Base: @done(25-12-10 19:22)
 Balle_ping_pong
     Affichage:
         Afficher la balle de ping pong:
