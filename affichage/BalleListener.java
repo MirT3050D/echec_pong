@@ -13,6 +13,8 @@ public class BalleListener implements ActionListener, KeyListener {
     protected Timer timer;
     protected double angleFleche; // angle de la flèche de départ
     protected boolean pretLancer = true;
+    protected int joueurGagnant = -1; // -1 = pas de gagnant, 0 ou 1 = numéro du gagnant
+    protected boolean partieTerminee = false;
 
     public BalleListener(Balle balle, JPanel panel) {
         this(balle, (PlateauPanel) panel, null);
@@ -26,8 +28,21 @@ public class BalleListener implements ActionListener, KeyListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // --- Rebond sur case contenant une pièce vivante ---
+        // Vérifier si la partie est terminée
+        if (partieTerminee) return;
+        
         objet.Plateau plateau = panel.getPlateau();
+        int gagnant = plateau.getGagnant();
+        if (gagnant != -1) {
+            partieTerminee = true;
+            joueurGagnant = gagnant;
+            timer.stop();
+            panel.repaint();
+            if (mainFrame != null) mainFrame.repaint();
+            return;
+        }
+        
+        // --- Rebond sur case contenant une pièce vivante ---
         objet.Piece[][] pieces = plateau.getPieces();
         Rectangle[][][] cases = plateau.getCases();
         boolean collisionTraitee = false;
@@ -352,10 +367,14 @@ public class BalleListener implements ActionListener, KeyListener {
 
     public double getAngleFleche() { return angleFleche; }
     public boolean isPretLancer() { return pretLancer; }
+    public boolean isPartieTerminee() { return partieTerminee; }
+    public int getJoueurGagnant() { return joueurGagnant; }
     public void reset() {
         pretLancer = true;
         balle.setEnMouvement(false);
         timer.stop();
+        partieTerminee = false;
+        joueurGagnant = -1;
     }
 }
 

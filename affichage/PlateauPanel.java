@@ -313,5 +313,31 @@ public class PlateauPanel extends JPanel {
                 g.fillOval(x, y, d, d);
             }
         }
+        
+        // Affichage du message de fin de partie si un roi est mort
+        int gagnant = plateau.getGagnant();
+        if (gagnant != -1) {
+            String message = "Joueur " + (gagnant + 1) + " a gagné!";
+            
+            // Fond semi-transparent
+            Graphics2D g2 = (Graphics2D) g;
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.8f));
+            g2.setColor(new Color(0, 0, 0));
+            g2.fillRect(0, 0, getWidth(), getHeight());
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+            
+            // Texte de victoire
+            Font originalFont = g.getFont();
+            Font victoryFont = originalFont.deriveFont(Font.BOLD, 60f);
+            g.setFont(victoryFont);
+            FontMetrics fm = g.getFontMetrics(victoryFont);
+            int textWidth = fm.stringWidth(message);
+            int textHeight = fm.getAscent();
+            int textX = (getWidth() - textWidth) / 2;
+            int textY = (getHeight() + textHeight) / 2;
+            g.setColor(Color.YELLOW);
+            g.drawString(message, textX, textY);
+            g.setFont(originalFont);
+        }
     }
 }

@@ -112,4 +112,31 @@ public class Plateau {
             }
         }
     }
+
+    /**
+     * Vérifie si le roi d'un joueur est mort
+     * @param joueur numéro du joueur (0 ou 1)
+     * @return true si le roi du joueur est mort (vie <= 0)
+     */
+    public boolean isRoiMort(int joueur) {
+        if (joueur < 0 || joueur >= pieces.length || pieces[joueur] == null) {
+            return false;
+        }
+        for (Piece p : pieces[joueur]) {
+            if (p != null && p.getNom().equalsIgnoreCase("roi")) {
+                return p.getVie() <= 0;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Retourne le joueur gagnant (-1 si pas de gagnant, 0 ou 1 si un roi est mort)
+     * @return 0 si joueur 1 a gagné (roi du joueur 0 est mort), 1 si joueur 0 a gagné, -1 sinon
+     */
+    public int getGagnant() {
+        if (isRoiMort(0)) return 1; // Joueur 1 a gagné
+        if (isRoiMort(1)) return 0; // Joueur 0 a gagné
+        return -1; // Pas de gagnant
+    }
 }
