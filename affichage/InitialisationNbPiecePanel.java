@@ -7,12 +7,18 @@ public class InitialisationNbPiecePanel extends JPanel {
     private JLabel label;
     private JTextField nbPieceField;
 
+
     public InitialisationNbPiecePanel() {
-        setLayout(new FlowLayout());
+        setLayout(new GridBagLayout());
+        JPanel innerPanel = new JPanel();
+        innerPanel.setLayout(new FlowLayout());
         label = new JLabel("Nombre de pièces :");
         nbPieceField = new JTextField(5);
-        add(label);
-        add(nbPieceField);
+        innerPanel.add(label);
+        innerPanel.add(nbPieceField);
+        innerPanel.setMaximumSize(new Dimension(400, 60));
+        add(innerPanel, new GridBagConstraints());
+        setOpaque(false);
     }
 
     public int getNbPiece() {

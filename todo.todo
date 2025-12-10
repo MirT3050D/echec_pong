@@ -1,48 +1,48 @@
-Pre_match_input
-    Affichage:
-       Afficher les champs de saisie suiants:
-        - Nombre de pièces
-        - Nombre de vie de chaque pièce
-    Métier:
-        Contrôle:
-            - Les nombres saisis ne sont pas négatifs (nb de pièces , et nb de vie)  
-            - Le nombre de pièces sasie doit être un nombre pair 
-        Métier:
-            - Création des Objets adéquats:
-                - Partie (Plateau plateau)
-                - Plateau (int nb_piece, pieces[][] pièces)
-                - Pièces (int vie, String nom, int position)
-        Persistance:
-            - Sauvegarde des objets créés dans une base de données et le fichier de sauvegarde
-    Base:
-        - partie (id, date, nbpieces)
-        - piece (id, nom, position)
-        - vie_piece (id, piece_id, vie, partie_id)
+✔ Pre_match_input @done(25-12-10 11:47)
+    ✔ Affichage: @done(25-12-10 11:47)
+       ✔ Afficher les champs de saisie suiants: @done(25-12-10 11:47)
+        ✔ Nombre de pièces @done(25-12-10 11:47)
+        ✔ Nombre de vie de chaque pièce @done(25-12-10 11:47)
+    ✔ Métier: @done(25-12-10 11:47)
+        ✔ Contrôle: @done(25-12-10 11:47)
+            ✔ Les nombres saisis ne sont pas négatifs (nb de pièces , et nb de vie) @done(25-12-10 11:47)
+            ✔ Le nombre de pièces sasie doit être un nombre pair @done(25-12-10 11:47)
+        ✔ Métier: @done(25-12-10 11:47)
+            ✔ Création des Objets adéquats: @done(25-12-10 11:47)
+                ✔ Partie (Plateau plateau) @done(25-12-10 11:47)
+                ✔ Plateau (int nb_piece, pieces[][] pièces) @done(25-12-10 11:47)
+                ✔ Pièces (int vie, String nom, int position) @done(25-12-10 11:47)
+        ✔ Persistance: @done(25-12-10 11:47)
+            ✔ Sauvegarde des objets créés dans une base de données et le fichier de sauvegarde @done(25-12-10 11:47)
+    ✔ Base: @done(25-12-10 11:47)
+        ✔ partie (id, date, nbpieces) @done(25-12-10 11:47)
+        ✔ piece (id, nom, position) @done(25-12-10 11:47)
+        ✔ vie_piece (id, piece_id, vie, partie_id) @done(25-12-10 11:47)
 
-Plateau_echec
-    Affichage:
-        Afficher un plateau d'echec vide (la taille varie selon le nombre de pièces saisie) :
-            - PlateauPanel (Plateau plateau) extends JPanel
-                Cette classe va servir à dessiner le plateau d'échec
-            - PlateauListner () implements MouseListener
-                Cette classe va gérer les événements de la souris sur le plateau
-    Métier:
-        Contrôle
-        Métier
-        Persistance
-    Base:
-Piece_echec
-    Affichage:
-        Afficher les pièces sur le plateau d'échec:
-            - PiecePanel (Piece piece) extends JPanel
-                Cette classe va servir à dessiner les pièces sur le plateau d'échec
-            - PieceListner ()
-                Cette classe va gérer les événements de la souris sur les pièces
-    Métier:
-        Contrôle
-        Métier
-        Persistance
-    Base:   
+✔ Plateau_echec @done(25-12-10 11:56)
+    ✔ Affichage: @done(25-12-10 11:56)
+        ✔ Afficher un plateau d'echec vide (la taille varie selon le nombre de pièces saisie) : @done(25-12-10 11:56)
+            ✔ PlateauPanel (Plateau plateau) extends JPanel @done(25-12-10 11:56)
+                ✔ Cette classe va servir à dessiner le plateau d'échec @done(25-12-10 11:56)
+            ✔ PlateauListner () implements MouseListener @done(25-12-10 11:56)
+                ✔ Cette classe va gérer les événements de la souris sur le plateau @done(25-12-10 11:56)
+    ✔ Métier: @done(25-12-10 11:56)
+        ✔ Contrôle @done(25-12-10 11:56)
+        ✔ Métier @done(25-12-10 11:56)
+        ✔ Persistance @done(25-12-10 11:56)
+    ✔ Base: @done(25-12-10 11:56)
+✔ Piece_echec @done(25-12-10 17:46)
+    ✔ Affichage: @done(25-12-10 17:46)
+        ✔ Afficher les pièces sur le plateau d'échec: @done(25-12-10 17:46)
+            ✔ PiecePanel (Piece piece) extends JPanel @done(25-12-10 17:46)
+                ✔ Cette classe va servir à dessiner les pièces sur le plateau d'échec @done(25-12-10 17:46)
+            ✔ PieceListner () @done(25-12-10 17:46)
+                ✔ Cette classe va gérer les événements de la souris sur les pièces @done(25-12-10 17:46)
+    ✔ Métier: @done(25-12-10 17:46)
+        ✔ Contrôle @done(25-12-10 17:46)
+        ✔ Métier @done(25-12-10 17:46)
+        ✔ Persistance @done(25-12-10 17:46)
+    ✔ Base: @done(25-12-10 17:46)
 Raquette_ping_pong
     Affichage:
         Afficher la raquette de ping pong:

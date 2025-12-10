@@ -9,9 +9,11 @@ public class InitialisationViePiecePanel extends JPanel {
     private ArrayList<String> nomsPieces;
 
     public InitialisationViePiecePanel(int nbPieces) {
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        setLayout(new GridBagLayout());
         vieFields = new ArrayList<>();
         nomsPieces = new ArrayList<>();
+        JPanel innerPanel = new JPanel();
+        innerPanel.setLayout(new BoxLayout(innerPanel, BoxLayout.Y_AXIS));
         java.util.List<objet.Piece> allPieces = objet.Piece.getAll();
         // Définir les ids à afficher selon la règle
         java.util.Set<Integer> postionsToShow = new java.util.HashSet<>();
@@ -45,24 +47,26 @@ public class InitialisationViePiecePanel extends JPanel {
             JTextField field = new JTextField(5);
             field.setPreferredSize(new Dimension(60, 25));
             if (postionsToShow.contains(piece.getPosition())) {
-                // System.out.println("--------------------------------------");
                 field.setEnabled(true);
                 field.setVisible(true);
-                // System.out.println("Vie de " + nom + " (" + (i + 1) + ") : " +
-                // field.getText());
-                add(new JLabel("Vie de " + nom + " (" + (i + 1) + ") :"));
-                add(field);
+                innerPanel.add(new JLabel("Vie de " + nom + " (" + (i + 1) + ") :"));
+                innerPanel.add(field);
             } else {
                 field.setEnabled(false);
                 field.setVisible(false);
                 field.setText("0");
             }
-            // System.out.println("vie = " + field.getText());
             vieFields.add(field);
         }
+        innerPanel.setMaximumSize(new Dimension(400, 600));
+        innerPanel.setPreferredSize(new Dimension(400, 600));
+        add(innerPanel, new GridBagConstraints());
+        setOpaque(false);
+        setMaximumSize(new Dimension(400, 600));
+        setPreferredSize(new Dimension(400, 600));
     }
 
-    public ArrayList<Integer> getVies() {
+    public ArrayList<Integer> getVies(int nbPieces) {
         ArrayList<Integer> vies = new ArrayList<>();
         for (int i = 0; i < vieFields.size(); i++) {
             System.out.println("Champ de vie " + (i + 1) + " : " + vieFields.get(i).getText());
@@ -80,7 +84,7 @@ public class InitialisationViePiecePanel extends JPanel {
                         vies.set(7 - i, Integer.parseInt(vieFields.get(i).getText()));
                     }
                     if (i == 8) {
-                        for (int j = 0; j < 8; j++) {
+                        for (int j = 0; j < nbPieces; j++) {
                             vies.set(i + j, Integer.parseInt(vieFields.get(i).getText()));
                         }
                     }

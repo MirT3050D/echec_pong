@@ -15,12 +15,14 @@ public class PlateauListener implements MouseListener {
     public void mouseClicked(MouseEvent e) {
         // Détection de la case cliquée
         objet.Plateau plateau = panel.getPlateau();
-        Rectangle[][] cases = plateau.getCases();
-        for (int i = 0; i < cases.length; i++) {
-            for (int j = 0; j < cases[i].length; j++) {
-                if (cases[i][j] != null && cases[i][j].contains(e.getPoint())) {
-                    JOptionPane.showMessageDialog(panel, "Case cliquée : Joueur " + (i+1) + ", Case " + (j+1));
-                    return;
+        Rectangle[][][] cases = plateau.getCases();
+        for (int joueur = 0; joueur < cases.length; joueur++) {
+            for (int ligne = 0; ligne < cases[joueur].length; ligne++) {
+                for (int col = 0; col < cases[joueur][ligne].length; col++) {
+                    if (cases[joueur][ligne][col] != null && cases[joueur][ligne][col].contains(e.getPoint())) {
+                        JOptionPane.showMessageDialog(panel, "Case cliquée : Joueur " + (joueur+1) + ", Ligne " + (ligne+1) + ", Colonne " + (col+1));
+                        return;
+                    }
                 }
             }
         }

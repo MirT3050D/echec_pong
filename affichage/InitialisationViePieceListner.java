@@ -25,7 +25,7 @@ public class InitialisationViePieceListner implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        ArrayList<Integer> vies = fenetre.getPanelViePiece().getVies();
+        ArrayList<Integer> vies = fenetre.getPanelViePiece().getVies(fenetre.getPanelNbPiece().getNbPiece());
         boolean ok = true;
         for (int vie : vies) {
             if (vie < 0) ok = false;
@@ -50,5 +50,6 @@ public class InitialisationViePieceListner implements ActionListener {
         Save saveManager = new Save();
         saveManager.sauvegarderConfigurationPartie(partie, plateau);
         JOptionPane.showMessageDialog(fenetre, "Initialisation terminée et sauvegardée !", "Info", JOptionPane.INFORMATION_MESSAGE);
+        fenetre.afficherPlateau(plateau);
     }
 }
