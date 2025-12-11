@@ -35,22 +35,49 @@ public class InitialisationViePieceListner implements ActionListener {
             return;
         }
         int nbPiece = fenetre.getPanelNbPiece().getNbPiece();
-        List<Piece> allPieces = Piece.getAll();
-        Piece[][] pieces = new Piece[2][16];
+        
+        System.out.println("[SERVEUR] Vies récupérées du panel: " + vies);
+        System.out.println("[SERVEUR] nbPiece=" + nbPiece);
+        
+        // Stocker les vies individuelles pour J1 (en mode réseau)
+        fenetre.setViesIndividuelles(vies);
+        
+        // Créer les pièces avec les 16 éléments (comme avant, pour avoir l'ordre correct)
+        java.util.List<objet.Piece> allPieces = objet.Piece.getAll();
+        objet.Piece[][] pieces = new objet.Piece[2][16];
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 16; j++) {
-                Piece base = allPieces.get(j);
-                // System.out.println("taille vies: " + vies.size() + " j: " + j);
+                objet.Piece base = allPieces.get(j);
                 int vie = (j < vies.size()) ? vies.get(j) : 0;
-                pieces[i][j] = new Piece(base.getId(), vie, base.getNom(), base.getPosition());
+                pieces[i][j] = new objet.Piece(base.getId(), vie, base.getNom(), base.getPosition());
+                if (i == 0) {  // Affiche une seule fois
+                    System.out.println("[SERVEUR] Piece[" + j + "]: " + base.getNom() + ", vie=" + vie);
+                }
             }
         }
-        Plateau plateau = new Plateau(0, nbPiece, pieces);
-        Partie partie = new Partie(0, new Date(), plateau);
+        
+        System.out.println("[SERVEUR] Plateau créé: pieces[0].length=" + pieces[0].length + 
+                          ", pieces[1].length=" + pieces[1].length);
+        
+        objet.Plateau plateau = new objet.Plateau(0, nbPiece, pieces);
+        
+        // DEBUG: Log des pièces vivantes
+        objet.Piece[][] piecesVivantes = plateau.getPiecesVivantesTriees();
+        System.out.println("[SERVEUR] Pièces vivantes J1: " + piecesVivantes[0].length + " et " + piecesVivantes[1].length);
+        System.out.println("[SERVEUR] Détail J1[0]: ");
+        for (objet.Piece p : piecesVivantes[0]) {
+            System.out.println("  - " + p.getNom() + " (vie=" + p.getVie() + ")");
+        }
+        
+        objet.Partie partie = new objet.Partie(0, new Date(), plateau);
         Save saveManager = new Save();
         plateau.setPieces(plateau.getPiecesVivantesTriees());
         saveManager.sauvegarderConfigurationPartie(partie, plateau);
         JOptionPane.showMessageDialog(fenetre, "Initialisation terminée et sauvegardée !", "Info", JOptionPane.INFORMATION_MESSAGE);
         fenetre.afficherPlateau(plateau);
+        
+        // Forcer le layout et le repaint
+        fenetre.validate();
+        fenetre.repaint();
     }
 }

@@ -8,6 +8,7 @@ import java.awt.Rectangle;
 
 public class BalleListener implements ActionListener, KeyListener {
     private JFrame mainFrame = null;
+    private reseau.GameServer gameServer = null;  // Référence au serveur pour envoyer les updates
     protected Balle balle;
     protected PlateauPanel panel;
     protected Timer timer;
@@ -15,15 +16,24 @@ public class BalleListener implements ActionListener, KeyListener {
     protected boolean pretLancer = true;
     protected int joueurGagnant = -1; // -1 = pas de gagnant, 0 ou 1 = numéro du gagnant
     protected boolean partieTerminee = false;
+    
+    // Throttle pour limiter la fréquence d'envoi des messages réseau
+    private long lastBallUpdateSent = 0;
+    private static final long BALL_UPDATE_INTERVAL = 50; // Envoyer toutes les 50ms (20 updates/sec)
 
     public BalleListener(Balle balle, JPanel panel) {
-        this(balle, (PlateauPanel) panel, null);
+        this(balle, (PlateauPanel) panel, null, null);
     }
 
     public BalleListener(Balle balle, JPanel panel, JFrame mainFrame) {
+        this(balle, (PlateauPanel) panel, mainFrame, null);
+    }
+    
+    public BalleListener(Balle balle, JPanel panel, JFrame mainFrame, reseau.GameServer gameServer) {
         this.balle = balle;
         this.panel = (PlateauPanel) panel;
         this.mainFrame = mainFrame;
+        this.gameServer = gameServer;
     }
 
     @Override
@@ -194,6 +204,9 @@ public class BalleListener implements ActionListener, KeyListener {
                             // Décrémente la vie de la pièce touchée
                             try {
                                 piece.setVie(piece.getVie() - 1);
+                                
+                                // Envoyer la mise à jour de la pièce au client
+                                sendPieceUpdate(joueur, i, piece);
                             } catch (Exception ex) {
                                 // En cas d'erreur (sécurité), on ignore pour éviter crash
                             }
@@ -213,14 +226,18 @@ public class BalleListener implements ActionListener, KeyListener {
         
         // --- Détection collision balle/raquette ---
         if (!collisionTraitee) {
+            // Utiliser dimensions adaptatives pour s'adapter à la taille de la fenêtre
+            final int PANEL_WIDTH = panel.getWidth() > 0 ? panel.getWidth() : 950;
+            final int PANEL_HEIGHT = 1080;
+            
             Raquette[] raquettes = panel.getPlateau().getRaquettes();
             Rectangle plateauBounds = panel.getPlateauBounds();
             int numJoueurs = raquettes.length;
             int lignesParJoueurRaquette = panel.getPlateau().getlargeur() / 2;
             int cols = panel.getPlateau().getNbPiece();
-            int caseWidth = panel.getWidth() / (cols + 2);
-            int caseHeight = panel.getHeight() / (numJoueurs * lignesParJoueurRaquette + 2);
-            int caseSize = Math.min(caseWidth, caseHeight);
+            int caseWidth = PANEL_WIDTH / (cols + 2);
+            int caseHeight = PANEL_HEIGHT / (numJoueurs * lignesParJoueurRaquette + 2);
+            int caseSize = (int)(Math.min(caseWidth, caseHeight) * 0.8);  // Réduction de 20%
             int offsetX = plateauBounds.x;
             int offsetY = plateauBounds.y;
             int rayonBalle = balle.getRayon();
@@ -339,6 +356,9 @@ public class BalleListener implements ActionListener, KeyListener {
         if (balle.getY() - r < minY) balle.setY(minY + r);
         if (balle.getY() + r > maxY) balle.setY(maxY - r);
         
+        // Envoyer l'état de la balle au serveur (si serveur activé) avec throttle
+        sendBalleUpdate();
+        
         panel.repaint();
         if (mainFrame != null) mainFrame.repaint();
     }
@@ -375,6 +395,70 @@ public class BalleListener implements ActionListener, KeyListener {
         timer.stop();
         partieTerminee = false;
         joueurGagnant = -1;
+    }
+    
+    /**
+     * Envoie l'état actuel de la balle au serveur (si le serveur est disponible)
+     * Utilise un throttle pour limiter la fréquence d'envoi
+     */
+    private void sendBalleUpdate() {
+        if (gameServer == null || !balle.isEnMouvement()) {
+            return;  // Ne pas envoyer si pas de serveur ou balle immobile
+        }
+        
+        // Throttle: ne pas envoyer si le dernier message a été envoyé il y a moins de BALL_UPDATE_INTERVAL ms
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - lastBallUpdateSent < BALL_UPDATE_INTERVAL) {
+            return;
+        }
+        lastBallUpdateSent = currentTime;
+        
+        try {
+            reseau.BalleState state = new reseau.BalleState(
+                balle.getX(),
+                balle.getY(),
+                balle.getAngle(),
+                balle.getVitesse(),
+                balle.isEnMouvement()
+            );
+            
+            reseau.Message msg = new reseau.Message(
+                reseau.Message.Type.BALL_UPDATE,
+                state
+            );
+            
+            gameServer.broadcastMessage(msg);
+        } catch (Exception e) {
+            System.err.println("[BalleListener] Erreur lors de l'envoi de l'état de balle: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * Envoie l'état d'une pièce touchée au client (si le serveur est disponible)
+     */
+    private void sendPieceUpdate(int joueur, int indexPiece, objet.Piece piece) {
+        if (gameServer == null) {
+            return;  // Ne pas envoyer si pas de serveur
+        }
+        
+        try {
+            reseau.PieceState state = new reseau.PieceState(
+                joueur,
+                indexPiece,
+                piece.getVie()
+            );
+            
+            reseau.Message msg = new reseau.Message(
+                reseau.Message.Type.PIECE_HIT,
+                state
+            );
+            
+            gameServer.broadcastMessage(msg);
+            System.out.println("[BalleListener] PIECE_HIT envoyé: joueur=" + joueur + 
+                             ", index=" + indexPiece + ", vie=" + piece.getVie());
+        } catch (Exception e) {
+            System.err.println("[BalleListener] Erreur lors de l'envoi de l'état de pièce: " + e.getMessage());
+        }
     }
 }
 

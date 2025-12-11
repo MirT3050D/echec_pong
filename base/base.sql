@@ -9,6 +9,7 @@
         nbpieces INTEGER NOT NULL
     );
 
+
     -- Table piece
     CREATE TABLE piece (
         id SERIAL PRIMARY KEY,

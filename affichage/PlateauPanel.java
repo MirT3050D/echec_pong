@@ -15,18 +15,22 @@ public class PlateauPanel extends JPanel {
      * @return Rectangle (x, y, width, height) de la zone de jeu
      */
     public Rectangle getPlateauBounds() {
+        // Utiliser getWidth() pour s'adapter à la taille de la fenêtre
+        final int PANEL_WIDTH = getWidth() > 0 ? getWidth() : 950;
+        final int PANEL_HEIGHT = 1080;
+        
         Rectangle[][][] cases = plateau.getCases();
         int joueurs = cases.length;
         int lignesParJoueur = plateau.getlargeur() / 2;
         int cols = plateau.getNbPiece();
         int totalRows = joueurs * lignesParJoueur;
-        int caseWidth = getWidth() / (cols + 2);
-        int caseHeight = getHeight() / (totalRows + 2);
-        int caseSize = Math.min(caseWidth, caseHeight);
+        int caseWidth = PANEL_WIDTH / (cols + 2);
+        int caseHeight = PANEL_HEIGHT / (totalRows + 2);
+        int caseSize = (int)(Math.min(caseWidth, caseHeight) * 0.8);  // Réduction de 20%
         int totalWidth = caseSize * cols;
         int totalHeight = caseSize * totalRows;
-        int offsetX = (getWidth() - totalWidth) / 2;
-        int offsetY = (getHeight() - totalHeight) / 2;
+        int offsetX = (PANEL_WIDTH - totalWidth) / 2;
+        int offsetY = (int)((PANEL_HEIGHT - totalHeight) * 0.2);  // 20% de marge en haut
         return new Rectangle(offsetX, offsetY, totalWidth, totalHeight);
     }
 
@@ -79,35 +83,73 @@ public class PlateauPanel extends JPanel {
     }
 
     public PlateauPanel(Plateau plateau) {
-        this(plateau, null);
+        this(plateau, null, null, null, -1);
     }
 
     public PlateauPanel(Plateau plateau, Balle balle) {
+        this(plateau, balle, null, null, -1);
+    }
+    
+    public PlateauPanel(Plateau plateau, Balle balle, reseau.GameServer gameServer, reseau.GameClient gameClient, int localJoueurId) {
         this.plateau = plateau;
         this.raquettePanel = new RaquettePanel(plateau, plateau.getRaquettes());
         this.balle = balle;
         setFocusable(true);
         setOpaque(true);
-        // Listener pour les raquettes : joueur 0 = flèches, joueur 1 = A Z E R
+        
+        // Listener pour les raquettes avec support réseau
+        // localJoueurId: 0=J1 contrôle raquette[0], 1=J2 contrôle raquette[1]
         Raquette[] raquettes = plateau.getRaquettes();
         if (raquettes != null) {
             if (raquettes[0] != null) {
-                addKeyListener(new RaquetteListener(raquettes[0], 0, plateau.getNbPiece(), this));
+                // Joueur 0 : touches fléchées
+                // Ne créer le listener que si c'est le joueur local
+                if (localJoueurId == 0 || localJoueurId < 0) {
+                    addKeyListener(new RaquetteListener(
+                        raquettes[0], 0, plateau.getNbPiece(), this,
+                        java.awt.event.KeyEvent.VK_LEFT,
+                        java.awt.event.KeyEvent.VK_RIGHT,
+                        java.awt.event.KeyEvent.VK_UP,
+                        java.awt.event.KeyEvent.VK_DOWN,
+                        gameServer, gameClient, 0  // Joueur 0
+                    ));
+                }
             }
             if (raquettes.length > 1 && raquettes[1] != null) {
-                // Mappe A (gauche), Z (droite), E (angle up), R (angle down)
-                addKeyListener(new RaquetteListener(
+                // Joueur 1 : touches AZQD
+                // Ne créer le listener que si c'est le joueur local
+                if (localJoueurId == 1 || localJoueurId < 0) {
+                    addKeyListener(new RaquetteListener(
                         raquettes[1], 0, plateau.getNbPiece(), this,
-                        java.awt.event.KeyEvent.VK_A,
-                        java.awt.event.KeyEvent.VK_Z,
-                        java.awt.event.KeyEvent.VK_E,
-                        java.awt.event.KeyEvent.VK_R));
+                        java.awt.event.KeyEvent.VK_A,  // gauche
+                        java.awt.event.KeyEvent.VK_Z,  // droite
+                        java.awt.event.KeyEvent.VK_E,  // angle up
+                        java.awt.event.KeyEvent.VK_R,  // angle down
+                        gameServer, gameClient, 1  // Joueur 1
+                    ));
+                }
             }
         }
-        // Pour le focus automatique à l'affichage
+        // Pour le focus automatique à l'affichage (seulement après la phase de lancement)
         addHierarchyListener(e -> {
             if ((e.getChangeFlags() & java.awt.event.HierarchyEvent.SHOWING_CHANGED) != 0 && isShowing()) {
-                requestFocusInWindow();
+                // Ne pas prendre le focus pendant la phase de lancement (pour garder W/X actifs)
+                if (!phaseLancement) {
+                    requestFocusInWindow();
+                    System.out.println("[PlateauPanel] Focus demandé automatiquement (hierarchy)");
+                }
+            }
+        });
+        
+        // Reprendre le focus quand on clique sur le plateau (seulement après la phase de lancement)
+        addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                // Ne pas prendre le focus pendant la phase de lancement (pour garder W/X actifs)
+                if (!phaseLancement) {
+                    requestFocusInWindow();
+                    System.out.println("[PlateauPanel] Focus repris suite au clic souris");
+                }
             }
         });
     }
@@ -118,18 +160,33 @@ public class PlateauPanel extends JPanel {
         // Fond blanc pour bien voir le centrage
         g.setColor(Color.WHITE);
         g.fillRect(0, 0, getWidth(), getHeight());
+        
+        // Utiliser getWidth() pour s'adapter à la taille de la fenêtre et centrer le plateau
+        final int panelWidth = getWidth() > 0 ? getWidth() : 950;
+        final int panelHeight = 1080;
+        
         Rectangle[][][] cases = plateau.getCases();
         int joueurs = cases.length;
         int lignesParJoueur = plateau.getlargeur() / 2;
         int cols = plateau.getNbPiece();
         int totalRows = joueurs * lignesParJoueur;
-        int caseWidth = getWidth() / (cols + 2);
-        int caseHeight = getHeight() / (totalRows + 2);
-        int caseSize = Math.min(caseWidth, caseHeight);
+        int caseWidth = panelWidth / (cols + 2);
+        int caseHeight = panelHeight / (totalRows + 2);
+        int caseSize = (int)(Math.min(caseWidth, caseHeight) * 0.8);  // Réduction de 20%
         int totalWidth = caseSize * cols;
         int totalHeight = caseSize * totalRows;
-        int offsetX = (getWidth() - totalWidth) / 2;
-        int offsetY = (getHeight() - totalHeight) / 2;
+        int offsetX = (panelWidth - totalWidth) / 2;
+        int offsetY = (int)((panelHeight - totalHeight) * 0.2);  // 20% de marge en haut au lieu de centré
+        
+        // DEBUG (afficher une seule fois pour éviter spam)
+        if (Math.random() < 0.01) {  // 1% de chance d'afficher
+            System.out.println("[PlateauPanel] paintComponent: panelWidth=" + panelWidth + 
+                          ", panelHeight=" + panelHeight + 
+                          ", cols=" + cols + ", totalRows=" + totalRows +
+                          ", caseSize=" + caseSize +
+                          ", totalWidth=" + totalWidth + ", totalHeight=" + totalHeight +
+                          ", offsetX=" + offsetX + ", offsetY=" + offsetY);
+        }
         for (int joueur = 0; joueur < joueurs; joueur++) {
             for (int ligne = 0; ligne < lignesParJoueur; ligne++) {
                 int globalRow = joueur * lignesParJoueur + ligne;
