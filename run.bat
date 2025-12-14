@@ -2,8 +2,9 @@
 echo Cleaning old classes...
 for /R %%i in (*.class) do del "%%i"
 
+echo Execution...
 echo Compilation...
-javac -d . -sourcepath . affichage/*.java jdbc/*.java main/*.java objet/*.java save/*.java reseau/*.java 2> error.txt
+javac -d . -sourcepath . -cp ".;lib\*" affichage/*.java jdbc/*.java main/*.java objet/*.java save/*.java reseau/*.java 2> error.txt
 if %ERRORLEVEL% neq 0 (
     echo Erreur de compilation ! Voir error.txt
     type error.txt
@@ -12,6 +13,6 @@ if %ERRORLEVEL% neq 0 (
 )
 
 echo Execution...
-java -cp ".;lib\postgresql-42.7.8.jar;" affichage.MenuPrincipal
-@REM java -cp ".;lib\postgresql-42.7.8.jar;" main.Main
+java -cp ".;lib\*" affichage.MenuPrincipal
+@REM java -cp ".;lib\*" main.Main
 pause
